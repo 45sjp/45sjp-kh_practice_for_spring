@@ -15,6 +15,8 @@ div#demo-container{
 <div id="demo-container" 
 	 class="border border-secondary mx-auto p-3 rounded">
 	<!-- https://getbootstrap.com/docs/4.1/components/forms/#readonly-plain-text -->
+	<p>담당자 이메일 : ${common.adminEmail}</p>
+	<p>담당자 연락처 : ${common.adminPhone}</p>
 	<form id="devFrm" name="devFrm">
 		<div class="form-group row">
 		  <label for="name" class="col-sm-2 col-form-label">이름</label>

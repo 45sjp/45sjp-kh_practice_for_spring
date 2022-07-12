@@ -82,7 +82,7 @@
 					<artifactId>jmxri</artifactId>
 				</exclusion>
 			</exclusions>
-			<scope>runtime</scope>
+			<!-- <scope>runtime</scope> 실제 컴파일 단계에서 사용하지 않고 runtime에서만 쓰겠다고 선언한 것 -->
 		</dependency>
 
 		<!-- @Inject -->

@@ -1,7 +1,9 @@
 package com.kh.spring.demo.controller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,16 +34,16 @@ import com.kh.spring.demo.model.service.DemoService;
  * InputStream/Reader : 요청에 대한 입력스트림
  * OutputStream/Writer : 응답에 대한 출력스트림. ServletOutputStream, PrintWriter
  * 
- * 사용자입력값처리
+ * 사용자 입력값 처리
  * 	- Command객체 : http요청 파라미터를 커맨드객체에 저장한 VO객체
- * 	- CommandMap :  HandlerMethodArgumentResolver에 의해 처리된 사용자입력값을 가진 Map객체
- * @Valid : 커맨드객체 유효성 검사객체
+ * 	- CommandMap :  HandlerMethodArgumentResolver에 의해 처리된 사용자 입력값을 가진 Map객체
+ * 	- @Valid : 커맨드객체 유효성 검사객체
  * 	- Error, BindingResult : Command객체에 저장결과(Command객체 바로 다음에 위치시킬 것)
- * @PathVariable : 요청url중 일부를 매개변수로 취할 수 있음
- * @RequestParam : 사용자입력값을 자바변수에 대입처리(필수여부 설정)
- * @RequestHeader : 헤더값
- * @CookieValue : 쿠키값
- * @RequestBody : http message body에 작성된 json을 vo객체로 변환처리
+ *  - @PathVariable : 요청 url 중 일부를 매개변수로 취할 수 있음
+ *	- @RequestParam : 사용자 입력값을 자바변수에 대입 처리(필수 여부 설정)
+ * 	- @RequestHeader : 헤더값
+ *	- @CookieValue : 쿠키값
+ *	- @RequestBody : http message body에 작성된 json을 vo객체로 변환 처리
  * 
  * 뷰에 전달할 모델 데이터 설정
  * 	- ModelAndView
@@ -49,13 +52,36 @@ import com.kh.spring.demo.model.service.DemoService;
  * 
  * @ModelAttribute : model속성에 대한 getter
  * @SessionAttribute : session속성에 대한 getter(required 여부 선택 가능)
- * @SessionAttributes : session에서 관리될 속성명을 class-level에 작성
+ * 
  * SessionStatus : @SessionAttributes로 등록된 속성에 대하여 사용완료(complete)처리. 세션을 폐기하지 않고 재사용함
+ * (@SessionAttributes : session에서 관리될 속성명을 class-level에 작성)
  * 
  * 기타
- * 	- MultipartFile : 업로드파일 처리 인터페이스. CommonsMultipartFile
- * 	- RedirectAttributes : DML처리후 요청주소 변경을 위한 redirect시 속성처리 지원
- *
+ * 	- MultipartFile : 업로드 파일 처리 인터페이스. CommonsMultipartFile
+ * 	- RedirectAttributes : DML 처리 후 요청 주소 변경을 위한 redirect시 속성 처리 지원
+ * 
+ * 
+ * 모델
+ * 	- view단에서 처리할 데이터 저장소
+ * 	- Map 객체
+ * 	------------------------------------------------------------
+ * 	- ModelAndView 클래스 : model + view단에 대한 처리를 모두 가지고 있음
+ * 		- 속성 : addObject(String, Object)
+ * 		- 뷰 : setViewName(String)
+ * 	- ModelMap 클래스 : model
+ * 		- 속성 : addAttribute(String, Object)
+ * 		- 뷰 : 별도의 String 반환 (뷰 기능 없음)
+ * 	- Model 인터페이스
+ * 		- 속성 : addAttribute(String, Object)
+ * 		- 뷰 : 별도의 String 반환 (뷰 기능 없음)
+ * 	------------------------------------------------------------
+ * 
+ * 
+ * @ModelAttribute - method 레벨
+ * 	- 특정 @Controller  하위에서 모든요청에 대한 공통 속성을 정의
+ * @ModelAttribute - parameter 레벨
+ * 	- 특정 model 속성에 대한 getter 역할
+ * 	- name값과 일치하는 속성이 없다면, 새로운 속성으로 등록 (Command객체는 암묵적으로 Model속성으로 등록)
  */
 @Controller
 @RequestMapping("/demo") // 중복된 부분을 클래스 레벨에서 RequestMapping으로 작성
@@ -65,6 +91,19 @@ public class DemoController {
 
 	@Autowired
 	private DemoService demoService;
+	
+	/**
+	 * 패키지별로 공통적으로 처리해야 할 부분이 있을 때 사용
+	 * @return
+	 */
+	@ModelAttribute("common")
+	public Map<String, Object> common() {
+		log.info("common 호출!");
+		Map<String, Object> map = new HashMap<>();
+		map.put("adminEmail", "admin@kh.or.kr");
+		map.put("adminPhone", "070-123-4567");
+		return map;
+	}
 	
 	/**
 	 * 전송방식 : GET(기본값)
@@ -122,7 +161,7 @@ public class DemoController {
 	 * @return
 	 */
 	@RequestMapping("/dev3.do")
-	public String dev3(Dev dev) {
+	public String dev3(Dev dev) { // public String dev3(@ModelAttribute("dev") Dev dev)
 		log.info("dev = {}", dev);
 		return "demo/devResult";
 	}

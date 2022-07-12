@@ -32,4 +32,20 @@
   	where
   		member_id = #{memberId}
   </select>
+  
+  <update id="updateMember">
+    update
+  		member
+  	set
+  		name = #{name},
+  		birthday = #{birthday},
+  		email = #{email},
+  		phone = #{phone},
+  		address = #{address},
+  		gender = #{gender},
+  		hobby = #{hobby},
+  		updated_at = sysdate
+  	where
+  		member_id = #{memberId}
+  </update>
 </mapper>
