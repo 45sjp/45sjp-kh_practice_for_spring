@@ -1,9 +1,19 @@
+<%@ page import="java.util.Arrays"%>
+<%@ page import="java.util.List"%>
+<%@ page import="com.kh.spring.demo.model.dto.Dev"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
+<%
+	Dev dev = (Dev) request.getAttribute("dev");
+	String[] langs = dev.getLang();
+	List<String> langList = langs != null ? 
+								Arrays.asList(langs) : 
+									null;
+	pageContext.setAttribute("langList", langList);
+%>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="Dev 수정" name="title"/>
 </jsp:include>
@@ -58,19 +68,19 @@ div#demo-container{
 			<label class="col-sm-2 col-form-label">개발언어</label>
 			<div class="col-sm-10">
 				<div class="form-check form-check-inline">
-				  <input class="form-check-input" type="checkbox" name="lang" id="Java" value="Java">
+				  <input class="form-check-input" type="checkbox" name="lang" id="Java" value="Java" ${langList.contains('Java') ? 'checked' : ''}>
 				  <label class="form-check-label" for="Java">Java</label>
 				</div>
 				<div class="form-check form-check-inline">
-				  <input class="form-check-input" type="checkbox" name="lang" id="C" value="C">
+				  <input class="form-check-input" type="checkbox" name="lang" id="C" value="C" ${langList.contains('C') ? 'checked' : ''}>
 				  <label class="form-check-label" for="C">C</label>
 				</div>
 				<div class="form-check form-check-inline">
-				  <input class="form-check-input" type="checkbox" name="lang" id="Javascript" value="Javascript">
+				  <input class="form-check-input" type="checkbox" name="lang" id="Javascript" value="Javascript" ${langList.contains('Javascript') ? 'checked' : ''}>
 				  <label class="form-check-label" for="Javascript">Javascript</label>
 				</div>
 				<div class="form-check form-check-inline">
-				  <input class="form-check-input" type="checkbox" name="lang" id="Python" value="Python">
+				  <input class="form-check-input" type="checkbox" name="lang" id="Python" value="Python" ${langList.contains('Python') ? 'checked' : ''}>
 				  <label class="form-check-label" for="Python">Python</label>
 				</div>
 			</div>
@@ -82,6 +92,7 @@ div#demo-container{
 </div>
 
 <script>
+/*
 window.addEventListener('load', (e) => {
 	<c:forEach items="${dev.lang}" var="lang" varStatus="vs">
 		<c:if test="${lang eq lang}">
@@ -89,7 +100,7 @@ window.addEventListener('load', (e) => {
 		</c:if>
 	</c:forEach>
 });
-
+*/
 function devValidate() {
 	// required 속성은 form 안에 제출 버튼이 있는 경우 유효함
  	// 폼 밖에서 제출하는 경우 별도의 validation 메소드가 필요함

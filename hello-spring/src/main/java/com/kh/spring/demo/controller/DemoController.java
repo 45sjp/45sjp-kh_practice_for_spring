@@ -158,11 +158,11 @@ public class DemoController {
 	}
 	
 	@RequestMapping(path="/updateDev.do", method=RequestMethod.POST)
-	public String updateDev(Dev dev, Model model) {
+	public String updateDev(Dev dev, RedirectAttributes redirectAttr) {
 		log.info("dev = {}", dev);
 		int result = demoService.updateDev(dev);
-		model.addAttribute("msg", "Dev 수정이 정상적으로 처리되었습니다.");
-		return "demo/devUpdateForm";
+		redirectAttr.addFlashAttribute("msg", "Dev 수정이 정상적으로 처리되었습니다.");
+		return "redirect:/demo/updateDev.do?no=" + dev.getNo();
 	}
 	
 	@RequestMapping(path="/deleteDev.do", method=RequestMethod.POST)
