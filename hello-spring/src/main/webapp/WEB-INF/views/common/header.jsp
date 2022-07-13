@@ -43,6 +43,7 @@
 				<ul class="navbar-nav mr-auto">
 			    	<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/board/boardList.do">게시판</a></li>
+                    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/todo/todoList.do">Todo</a></li>
                     <!-- 데모메뉴 DropDown -->
                     <!--https://getbootstrap.com/docs/4.1/components/navbar/#supported-content-->
                     <li class="nav-item dropdown">

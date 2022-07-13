@@ -59,3 +59,32 @@ commit;
 select * from member;
 
 -- delete from member where member_id = 'sinsa';
+
+--todo 테이블 생성
+create table todo (
+        no number,
+        todo varchar2(4000),
+        created_at date default sysdate,
+        completed_at date,
+        constraint pk_todo_no primary key(no)
+);
+
+create sequence seq_todo_no;
+
+insert into todo values(seq_todo_no.nextval, '우산 청소하기', default, default);
+insert into todo values(seq_todo_no.nextval, '형광등 교체', default, default);
+insert into todo values(seq_todo_no.nextval, '장보기', default, default);
+insert into todo values(seq_todo_no.nextval, 'GoF의 디자인패턴 읽기', default, default);
+
+select * from todo;
+
+commit;
+
+-- 할일 완료
+update todo set completed_at = sysdate where no = 3;
+
+-- 할일목록 오름차순
+-- 완료목록 내림차순
+select * from (select * from todo where completed_at is null order by no asc)
+union all
+select * from (select * from todo where completed_at is not null order by no desc);

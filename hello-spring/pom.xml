@@ -35,12 +35,18 @@
 			<version>${org.springframework-version}</version>
 		</dependency>
 				
-		<!-- AspectJ -->
+		<!-- AspectJ : AOP 관련 모듈 -->
+		<!-- 11. aop 처리를 위한 의존 -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>${org.aspectj-version}</version>
-		</dependency>	
+		</dependency>
+		<dependency>
+	        <groupId>org.aspectj</groupId>
+	        <artifactId>aspectjweaver</artifactId>
+	        <version>${org.aspectj-version}</version>
+	    </dependency>
 		
 		<!-- Logging -->
 		<dependency>
@@ -83,6 +89,7 @@
 				</exclusion>
 			</exclusions>
 			<!-- <scope>runtime</scope> 실제 컴파일 단계에서 사용하지 않고 runtime에서만 쓰겠다고 선언한 것 -->
+			<!-- scope : compile, runtime, provided, test -->
 		</dependency>
 
 		<!-- @Inject -->
