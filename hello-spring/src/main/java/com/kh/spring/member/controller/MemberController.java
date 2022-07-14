@@ -80,10 +80,12 @@ public class MemberController {
 	@GetMapping("/memberLogin.do")
 	public void memberLogin(
 			@RequestHeader(name = "Referer", required = false) String referer,
+			@SessionAttribute(required = false) String next,
 			Model model) {
 		log.info("referer = {}", referer);
+		log.info("next = {}", next);
 		
-		if(referer != null)
+		if(next == null && referer != null)
 			model.addAttribute("next", referer);
 	}
 	

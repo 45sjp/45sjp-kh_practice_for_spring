@@ -51,22 +51,4 @@ public class LoggerAspect {
 		return returnObj;
 	}
 	
-	/**
-	 * @실습문제
-	 * 	Around Advice - insertTodo메소드의 실행시간을 구하시오.
-	 * 	스프링이 제공하는 org.springframework.util.StopWatch를 사용할 것.
-	 */
-	@Pointcut("execution(* com.kh.spring.todo.controller.TodoController.insertTodo(..))")
-	public void stopWatchPointcut() {}
-	
-	@Around("stopWatchPointcut()")
-	public Object stopWatch(ProceedingJoinPoint joinPoint) throws Throwable {
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-		Object returnObj = joinPoint.proceed();
-		stopWatch.stop();
-		log.debug("insertTodo메소드의 실행시간 = {}초", stopWatch.getTotalTimeSeconds());
-		return returnObj;
-	}
-	
 }

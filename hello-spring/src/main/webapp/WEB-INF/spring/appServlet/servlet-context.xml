@@ -35,6 +35,8 @@
 		</interceptor>
 		<interceptor>
 			<mapping path="/member/**"/>
+			<mapping path="/board/**"/>
+			<exclude-mapping path="/board/boardList.do"/>
 			<exclude-mapping path="/member/memberLogin.do"/>
 			<beans:bean class="com.kh.spring.common.interceptor.LoginInterceptor"/>
 		</interceptor>
@@ -42,5 +44,12 @@
 	
 	<!-- #11.2 aop 관련 어노테이션 등록 처리 -->
 	<aop:aspectj-autoproxy />
+	
+	<!-- #12.1. 파일 업로드 처리할 multipartResolver -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="52428800"/> <!-- 한 요청당 업로드 최대 크기 : 50 * 1024 * 1024 (50MB) -->
+		<beans:property name="maxUploadSizePerFile" value="10485760"/> <!-- 한 파일당 최대 크기 : 10 * 1024 * 1024 (10MB) -->
+		<beans:property name="maxInMemorySize" value="10240"/> <!-- 메모리 사용 최대 크기 : 10 * 1024 (10KB) => 이 크기를 초과하면 임시파일 생성 -->
+	</beans:bean>
 	
 </beans:beans>
