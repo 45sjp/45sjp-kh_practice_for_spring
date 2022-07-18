@@ -2,12 +2,18 @@ package com.kh.spring.board.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -36,6 +43,9 @@ public class BoardController {
 	
 	@Autowired
 	ServletContext application;
+	
+	@Autowired
+	ResourceLoader resourceLoader; // Resource를 불러오는 의존
 	
 	@GetMapping("/boardList.do")
 	public ModelAndView boardList(
@@ -199,6 +209,51 @@ public class BoardController {
 			throw e;
 		}
 		return "redirect:/board/boardDetail.do?no=" + board.getNo(); // board#no
+	}
+	
+	/**
+	 * Resource : PSA
+	 * 	- UrlResource
+	 * 	- ClassPathResource
+	 * 	- FileSystemResource : 서버 컴퓨터 지원
+	 * 	- ServletContextResource : 웹 루트 상의 자원
+	 * 	- InputStreamResource
+	 * 	- ByteArrayResource
+	 * 
+	 * @ResponseBody
+	 * 	- 응답메세지 바디에 핸들러 리턴 객체를 직접 출력
+	 * @param no
+	 * @return
+	 * @throws Exception 
+	 */
+	@GetMapping(path = "/fileDownload.do", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public Resource fileDownload(@RequestParam int no, HttpServletResponse response) throws Exception {
+		Resource resource = null;
+		try {
+			// 1. 첨부파일 조회
+			Attachment attach = boardService.selectOneAttachment(no);
+			log.debug("attach = {}", attach);
+			
+			String saveDirectory = application.getRealPath("/resources/upload/board");
+			String renamedFilename = attach.getRenamedFilename();
+			File downFile = new File(saveDirectory, renamedFilename);
+			
+			// 2. Resource 객체 생성
+			String location = "file:" + downFile; // File#toString이 파일 절대경로로 오버라이드되어 있음
+			log.debug("location = {}", location);
+			resource = resourceLoader.getResource(location);
+			
+			// 3. 응답헤더 작성
+			String filename = URLEncoder.encode(attach.getOriginalFilename(), "utf-8");
+//			response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+			response.addHeader(HttpHeaders.CONTENT_DISPOSITION, 
+					"attachment; filename=\"" + filename + "\"");
+		} catch (Exception e) {
+			log.error("파일 다운로드 오류!", e);
+			throw e;
+		}
+		return resource;
 	}
 	
 }

@@ -231,7 +231,10 @@ where
 order by
         b.no desc;
         
-delete from member where member_id = 'sinsa';
+-- delete from member where member_id = 'sinsa';
 
 select * from member where member_id = 'sinsa';
+
+-- 게시글 수정
+select * from attachment where board_no = 141;
 ---------------------------------------------------------

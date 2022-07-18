@@ -2,6 +2,8 @@ package com.kh.spring.demo.model.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Select;
+
 import com.kh.spring.demo.model.dto.Dev;
 
 public interface DemoDao {
@@ -15,5 +17,8 @@ public interface DemoDao {
 	int updateDev(Dev dev);
 
 	int deleteDev(int no);
+
+	@Select("select * from dev where email = #{email}")
+	Dev selectOneDevByEmail(String email);
 
 }

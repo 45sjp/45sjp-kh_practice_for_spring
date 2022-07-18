@@ -50,4 +50,9 @@ public class DemoServiceImpl implements DemoService {
 		return demoDao.deleteDev(no);
 	}
 
+	@Override
+	public Dev selectOneDevByEmail(String email) {
+		return demoDao.selectOneDevByEmail(email);
+	}
+
 }

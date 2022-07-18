@@ -39,4 +39,9 @@ public class DemoDaoImpl implements DemoDao {
 		return sqlSession.delete("demo.deleteDev", no);
 	}
 	
+	@Override
+	public Dev selectOneDevByEmail(String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

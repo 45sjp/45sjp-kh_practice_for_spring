@@ -14,13 +14,18 @@
 			<tr>
 				<th>아이디</th>
 				<td>
-					<input type="text" 
-						   class="form-control" 
-						   placeholder="4글자이상"
-						   name="memberId" 
-						   id="memberId"
-						   value="honggd"
-						   required>
+					<div id="memberId-container">
+						<input type="text" 
+							   class="form-control" 
+							   placeholder="4글자이상"
+							   name="memberId" 
+							   id="memberId"
+							   value="honggd"
+							   required>
+						<span class="guide ok">이 아이디는 사용 가능합니다.</span>
+						<span class="guide error">이 아이디는 이미 사용 중입니다.</span>
+						<input type="hidden" id="idValid" value="0" /> <!-- 0-사용 불가 / 1-사용 가능 -->
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -94,11 +99,63 @@
 	</form>
 </div>
 <script>
+document.querySelector("#memberId").addEventListener('keyup', (e) => {
+	const memberIdVal = e.target.value;
+	const ok = document.querySelector(".guide.ok");
+	const error = document.querySelector(".guide.error");
+	const idValid = document.querySelector("#idValid");
+	
+	if(memberIdVal.length < 4) {
+		error.style.display = "none";
+		ok.style.display = "none";
+		idValid.value = 0;
+		return;
+	}
+	console.log(memberIdVal);
+	
+	$.ajax({
+		url : '${pageContext.request.contextPath}/member/checkIdDuplicate.do',
+		data : {
+			memberId : memberIdVal
+		},
+		success(response) {
+			console.log(response);
+			const {memberId, available} = response;
+			
+			if(available) {
+				error.style.display = "none";
+				ok.style.display = "inline";
+				idValid.value = 1;
+			}
+			else {
+				error.style.display = "inline";
+				ok.style.display = "none";
+				idValid.value = 0;
+			}
+		},
+		error(jqxhr, statusText, err) {
+			console.log(jqxhr, statusText, error);
+			
+			const {responseJSON : {error}} = jqxhr;
+			alert(error);
+		}
+		
+	});
+	
+});
+
 document.memberEnrollFrm.addEventListener('submit', (e) => {
 	const memberId = document.querySelector("#memberId");
+	const idValid = document.querySelector("#idValid");
 	
 	if(!/^\w{4,}$/.test(memberId.value)) {
 		alert("아이디는 최소 4글자이상의 영문자/숫자만 가능합니다.");
+		e.preventDefault();
+		return;
+	}
+	
+	if(idValid.value !== "1") {
+		alert("유효한 아이디를 입력해주세요.");
 		e.preventDefault();
 		return;
 	}

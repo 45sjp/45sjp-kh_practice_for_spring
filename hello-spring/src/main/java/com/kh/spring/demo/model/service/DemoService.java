@@ -16,4 +16,6 @@ public interface DemoService {
 
 	int deleteDev(int no);
 
+	Dev selectOneDevByEmail(String email);
+
 }

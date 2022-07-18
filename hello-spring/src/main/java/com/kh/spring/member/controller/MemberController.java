@@ -1,6 +1,13 @@
 package com.kh.spring.member.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
@@ -156,5 +164,92 @@ public class MemberController {
 		}
 		return "redirect:/member/memberDetail.do";
 	}
+	//-------------------------- Spring에서 비동기 요청을 하는 방법 --------------------------
+	/**
+	 * 방법1 : ajax1
+	 * 	- BeanNameViewResolver + jsonView
+	 * 	- jsonView : model에 저장된 속성을 json으로 변환, 응답메세지에 작성
+	 * 
+	 * @param memberId
+	 * @param model
+	 * @return
+	 */
+	// @GetMapping("/checkIdDuplicate.do")
+	public String checkIdDuplicate(@RequestParam String memberId, Model model) {
+		try {
+			Member member = memberService.selectOneMember(memberId);
+			boolean available = member == null;
+			
+			model.addAttribute("memberId", memberId);
+			model.addAttribute("available", available);
+		} catch (Exception e) {
+			log.error("중복 아이디 체크 오류!", e);
+			throw e;
+		}
+		return "jsonView";
+	}
+	
+	/**
+	 * 방법2 : @ResponseBody + MessageConverter
+	 * 	- 리턴 객체를 특정 타입(json)으로 변환해주는 빈 - jackson
+	 * 	- @ResponseBody : 핸들러의 리턴 객체를 직접 응답메세지에 출력하는 방식
+	 * 
+	 * @param memberId
+	 * @param model
+	 * @return
+	 */
+	// @GetMapping("/checkIdDuplicate.do")
+	@ResponseBody
+	public Map<String, Object> checkIdDuplicate2(@RequestParam String memberId) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			Member member = memberService.selectOneMember(memberId);
+			boolean available = member == null;
+			
+			map.put("memberId", memberId);
+			map.put("available", available);
+		} catch (Exception e) {
+			log.error("중복 아이디 체크 오류!", e);
+			throw e;
+		}
+		return map;
+	}
+	
+	/**
+	 * 방법3 : ResponseEntity
+	 * 	- 응답메세지 작성을 도와주는 객체. status, header, body에 자유롭게 작성 가능
+	 * 	- @ResponseBody 포함
+	 * 	- 기본적으로 json에 반환
+	 * 
+	 * @param memberId
+	 * @return
+	 */
+	@GetMapping("/checkIdDuplicate.do")
+	public ResponseEntity<?> checkIdDuplicate3(@RequestParam String memberId) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			Member member = memberService.selectOneMember(memberId);
+			boolean available = member == null;
+			
+			map.put("memberId", memberId);
+			map.put("available", available);
+		} catch (Exception e) {
+			log.error("중복 아이디 체크 오류!", e);
+			// throw e;
+			// 사용자화해서 에러메세지 출력
+			map.put("error", e.getMessage());
+
+			return ResponseEntity
+					.status(HttpStatus.INTERNAL_SERVER_ERROR) // .status(HttpStatus.OK) == .status(200)
+					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+					.body(map);
+		}
+		// return ResponseEntity.ok(map); // 200 + body에 작성할 맵
+		return ResponseEntity
+				.status(HttpStatus.OK) // .status(HttpStatus.OK) == .status(200)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.body(map);
+	}
+	//---------------------------------------------------------------------------------
 	
 }
