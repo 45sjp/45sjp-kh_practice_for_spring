@@ -216,6 +216,22 @@ where
         
 -- rowbounds객체 이용시
 select * from board order by no desc;
-
+select * from attachment;
 select count(*) from attachment where board_no = 60;
+
+-- board - member - attachment
+select
+        *
+from
+        board b
+                left join member m on b.member_id = m.member_id -- 1:1 (association 처리)
+                left join attachment a on b.no = a.board_no -- 1:N (collection 처리)
+where
+        b.no = 60
+order by
+        b.no desc;
+        
+delete from member where member_id = 'sinsa';
+
+select * from member where member_id = 'sinsa';
 ---------------------------------------------------------

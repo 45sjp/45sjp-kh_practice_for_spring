@@ -15,14 +15,62 @@
   
   <insert id="insertBoard">
   	insert into
-  		board
+  		board (no, title, member_id, content)
   	values (
   		seq_board_no.nextval,
   		#{title},
   		#{memberId},
-  		#{content},
-  		default,
-  		default,
-  		default)
+  		#{content})
+  	<selectKey keyProperty="no" resultType="_int" order="AFTER"> <!-- 전달된 board 객체의 setNo -->
+  		select
+  			seq_board_no.currval
+  		from
+  			dual
+  	</selectKey>
   </insert>
+  
+  <select id="selectOneBoardCollection" resultMap="boardCollectionMap">
+  	select
+        b.*,
+        m.*,
+        a.no attach_no,
+        a.*
+	from
+        board b
+                left join member m on b.member_id = m.member_id
+                left join attachment a on b.no = a.board_no
+	where
+        b.no = #{no}
+	order by
+        b.no desc
+  </select>
+  
+  <!-- Collection을 사용할 때 resultMap은 컬럼을 생략할 수 없음! -->
+  <resultMap type="board" id="boardCollectionMap">
+  	<id column="no" property="no"/>
+  	<result column="title" property="title"/>
+  	<result column="member_id" property="memberId"/>
+  	<result column="content" property="content"/>
+  	<result column="created_at" property="createdAt"/>
+  	<result column="updated_at" property="updatedAt"/>
+  	<result column="read_cound" property="readCount"/>
+  	
+  	<!-- proerty="setMember" javaType="별칭" -->
+  	<association property="member" javaType="member">
+  		<id column="member_id" property="memberId"/>
+  		<result column="name" property="name"/>
+  		<result column="email" property="email"/>
+  	</association>
+  	
+  	<!--
+  		ofType : 자바빈 프로퍼티 타입과 collection 타입을 구분하기 위함
+  			- javaType은 생략 가능함!
+  	-->
+  	<collection property="attachments" javaType="arrayList" ofType="attachment">
+  		<id column="attach_no" property="no"/>
+  		<result column="original_filename" property="originalFilename"/>
+  		<result column="renamed_filename" property="renamedFilename"/>
+  		<result column="download_count" property="downloadCount"/>
+  	</collection>
+  </resultMap>
 </mapper>

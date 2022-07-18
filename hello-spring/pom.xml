@@ -36,7 +36,8 @@
 		</dependency>
 				
 		<!-- AspectJ : AOP 관련 모듈 -->
-		<!-- 11. aop 처리를 위한 의존 -->
+		<!-- #11. AOP 처리를 위한 의존 -->
+		<!-- #13. 트랜잭션처리를 위한 AOP 의존 -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>

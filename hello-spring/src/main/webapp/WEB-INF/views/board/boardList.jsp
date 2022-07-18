@@ -9,11 +9,28 @@
 <style>
 /*글쓰기버튼*/
 input#btn-add{float:right; margin: 0 0 15px;}
+tr[data-no] {cursor: pointer}
 </style>
 <script>
-function goToBoardForm(){
+function goToBoardForm() {
 	location.href = "${pageContext.request.contextPath}/board/boardForm.do";
 }
+
+window.addEventListener('load', (e) => {
+	document.querySelectorAll("tr[data-no]").forEach((tr) => {
+		tr.addEventListener('click', (e) => {
+			console.log(e.target); // td
+			const tr = e.target.parentElement;
+			console.log(tr);
+			// 특정 선택자와의 일치 여부를 boolean형을 반환
+			if(tr.matches('tr[data-no]')) {
+				const no = tr.dataset.no;
+				location.href = '${pageContext.request.contextPath}/board/boardDetail.do?no=' + no;
+			}
+		});
+		
+	});
+});
 </script>
 <section id="board-container" class="container">
 	<input type="button" value="글쓰기" id="btn-add" class="btn btn-outline-success" onclick="goToBoardForm();"/>
@@ -33,7 +50,7 @@ function goToBoardForm(){
 	    </c:if>
 	    <c:if test="${not empty list}">
 			<c:forEach items="${list}" var="board">
-				<tr>
+				<tr data-no="${board.no}">
 					<td>${board.no}</td>
 					<td>${board.title}</td>
 					<td>${board.memberId}</td>
