@@ -24,6 +24,13 @@
   		)
   </insert>
   
+  <insert id="insertAuthority">
+  	insert into
+  		authority
+  	values(
+  		#{memberId}, 'ROLE_USER')
+  </insert>
+  
   <select id="selectOneMember" resultType="member">
   	select
   		*

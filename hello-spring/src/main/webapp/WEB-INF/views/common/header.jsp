@@ -3,27 +3,29 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>${param.title}</title>
-
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<!-- bootstrap js: jquery load 이후에 작성할것.-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
-<!-- bootstrap css -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-
-<!-- 사용자작성 css -->
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" />
-<script>
-<c:if test="${not empty msg}">
-	alert('${msg}');
-</c:if>
-</script>
+	<meta charset="UTF-8">
+	<title>${param.title}</title>
+	
+	<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+	<!-- bootstrap js: jquery load 이후에 작성할것.-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	
+	<!-- bootstrap css -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+	
+	<!-- 사용자작성 css -->
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" />
+	<script>
+	<c:if test="${not empty msg}">
+		alert('${msg}');
+	</c:if>
+	</script>
 </head>
 <body>
 <div id="container">
@@ -55,24 +57,34 @@
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/demo/devList.do">Dev 목록</a>
                         </div>
 				    </li>
+				    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/memberList.do">회원관리</a></li>
 			    </ul>
-			    <c:if test="${not empty loginMember}">
-			    	<span><a href="${pageContext.request.contextPath}/member/memberDetail.do">${loginMember.name}</a>님, 안녕하세요.</span>
-			    	 &nbsp; &nbsp;
+			    <sec:authorize access="isAuthenticated()">
+			    	<%-- 로그인한 경우 --%>
+			    	<span>
+			    		<a href="${pageContext.request.contextPath}/member/memberDetail.do">
+			    			<sec:authentication property="principal.username"/>
+			    			<sec:authentication property="authorities"/>
+				    	</a>님, 안녕하세요.
+				    </span>
+			    	&nbsp;&nbsp;
+			    	<form action="${pageContext.request.contextPath}/member/memberLogout.do" method="post">
+				    	<button 
+					    	class="btn btn-outline-success my-2 my-sm-0" type="submit">로그아웃</button>
+					    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />			    	
+			    	</form>
+			    </sec:authorize>
+			    <sec:authorize access="isAnonymous()">
+			    	<%-- 로그인하지 않은 경우 --%>
 			    	<button 
-			    	class="btn btn-outline-success my-2 my-sm-0" type="button" 
-			    	onclick="location.href='${pageContext.request.contextPath}/member/memberLogout.do';">로그아웃</button>
-			    </c:if>
-			    <c:if test="${empty loginMember}">
-				    <button 
 				    	class="btn btn-outline-success my-2 my-sm-0" type="button" 
 				    	onclick="location.href='${pageContext.request.contextPath}/member/memberLogin.do';">로그인</button>
 	                &nbsp;
-					<button 
-						class="btn btn-outline-success my-2 my-sm-0" type="button"
-						onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do';">회원가입</button>			    	
-			    </c:if>
-		 	</div>
+	                <button 
+	                	class="btn btn-outline-success my-2 my-sm-0" type="button"
+	                	onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do';">회원가입</button>
+			    </sec:authorize>
+			</div>
 		</nav>
 	</header>
 	<section id="content">

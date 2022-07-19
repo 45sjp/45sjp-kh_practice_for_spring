@@ -48,15 +48,16 @@
 		<!-- 즉, 핸들러에서 viewResolver를 리턴할 때 BeanNameViewResolver가 있다면 우선처리됨 -->
 	</beans:bean>
 	
-	<!-- @Component가 붙은 것을 빈으로 등록 -->
+	<!-- @Component 클래스를 빈으로 등록 -->
 	<context:component-scan base-package="com.kh.spring" />
 	
 	<!-- #10. interceptor 등록 -->
 	<interceptors>
 		<interceptor>
 			<mapping path="/**"/>
-			<beans:bean class="com.kh.spring.common.interceptor.LoggerInterceptor"></beans:bean>		
+			<beans:bean class="com.kh.spring.common.interceptor.LoggerInterceptor"></beans:bean>
 		</interceptor>
+		<!-- spring-security에서 처리하기 때문에 주석 처리
 		<interceptor>
 			<mapping path="/member/**"/>
 			<mapping path="/board/**"/>
@@ -68,6 +69,7 @@
 			<exclude-mapping path="/member/checkIdDuplicate.do"/>
 			<beans:bean class="com.kh.spring.common.interceptor.LoginInterceptor"/>
 		</interceptor>
+		-->
 	</interceptors>
 	
 	<!-- #11.2. AOP 관련 어노테이션 등록 처리 -->

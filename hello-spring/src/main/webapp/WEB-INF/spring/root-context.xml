@@ -35,7 +35,7 @@
 	</bean>
 	
 	<!-- #8.1. @Mapper 인터페이스를 관리 -->
-	<mybatis-spring:scan base-package="com.kh.spring.**.dao"/>
+	<mybatis-spring:scan base-package="com.kh.**.dao"/>
 	
 	<!-- #13.1. 트랜잭션 매니저 빈 설정 -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

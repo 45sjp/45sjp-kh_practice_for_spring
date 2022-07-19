@@ -238,3 +238,38 @@ select * from member where member_id = 'sinsa';
 -- 게시글 수정
 select * from attachment where board_no = 141;
 ---------------------------------------------------------
+
+-- spring-security 관련 authority테이블 작성
+---------------------------------------------------------
+create table authority (
+        member_id varchar2(20),
+        auth varchar2(50),
+        constraint pk_authority primary key(member_id, auth),
+        constraint fk_authority_member_id foreign key(member_id) references member(member_id) on delete cascade
+);
+
+select * from member;
+
+insert into authority values ('abcde', 'ROLE_USER');
+insert into authority values ('qwert', 'ROLE_USER');
+insert into authority values ('honggd', 'ROLE_USER');
+insert into authority values ('iloveyou', 'ROLE_USER');
+insert into authority values ('sejong', 'ROLE_USER');
+insert into authority values ('admin', 'ROLE_USER');
+insert into authority values ('admin', 'ROLE_ADMIN');
+commit;
+
+select * from authority;
+
+-- 회원등록 member + authority insert!
+select
+        *
+from
+        member m join authority a
+                on m.member_id = a.member_id
+where
+        m.member_id = 'admin';
+        
+-- bcrypt 비밀번호 수정
+update member set password = '$2a$10$wknr5gqMXSTB3gKQyEX.SO7/hREW46t3iDGMqC2xpjcf/sQhq8D7m' where member_id = 'qwerty';
+---------------------------------------------------------

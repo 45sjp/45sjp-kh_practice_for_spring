@@ -23,12 +23,12 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * RestAPI
- * -----------------------------------------
+ * --------------------------------------------------
  * 	- Representational State Transfer
  * 	- 요청 성격별로 전송방식을 결정해서 사용하는 서비스
  * 		- C : POST
  * 		- R : GET
- * 		- U : PUT / PATCH
+ * 		- U : PUT(전체 데이터 교체) / PATCH(일부 데이터 교체)
  * 		- D : DELETE
  * 	- URL 작성 시에 명사형으로 계층구조를 갖도록 작성
  * 			(동사를 사용하지 않음!)
@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
  * 		- GET /dev/1 selectOneDev
  * 		- PUT /dev/1 updatedDev
  * 		- DELETE /dev/1 deleteDev
- * -----------------------------------------
+ * --------------------------------------------------
  */
 @RequestMapping("/dev")
 @Controller
@@ -67,6 +67,27 @@ public class DevRestAPIController {
 		}
 		return ResponseEntity.ok(list);
 	}
+	
+	/**
+	 * ResponseEntity<T>를 사용하지 않을 경우
+	 * 
+	 * @return
+	 */
+//	@GetMapping
+//	@ResponseBody
+//	public Object _dev() {
+//		List<Dev> list = null;
+//		try {
+//			list = demoService.selectDevList();
+//			log.debug("list = {}", list);
+//		} catch (Exception e) {
+//			log.error("Dev 목록 조회 오류!", e);
+//			Map<String, Object> map = new HashMap<>();
+//			map.put("msg", "Dev 목록 조회 오류!");
+//			return map;
+//		}
+//		return list;
+//	}
 	
 	@GetMapping("/{no}")
 	public ResponseEntity<?> dev(@PathVariable int no) {
@@ -139,7 +160,19 @@ public class DevRestAPIController {
 				.body(dev);
 	}
 	
-	@GetMapping("/lang/{lang}")
+	/**
+	 * @실습문제 : DevRestAPI
+	 * http://localhost:9090/spring/dev/lang/Java
+	 * http://localhost:9090/spring/dev/lang/C
+	 * http://localhost:9090/spring/dev/lang/Javascript
+	 * 
+	 * 해당 언어 가능한 개발자 조회하기
+	 * 
+	 * @param lang
+	 * @return
+	 */
+	//----------------------------------------------------------------------------------
+	// @GetMapping("/lang/{lang}")
 	public ResponseEntity<?> dev2(@PathVariable String lang) {
 		List<Dev> devs = new ArrayList<>();
 		try {
@@ -168,5 +201,39 @@ public class DevRestAPIController {
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
 				.body(devs);
 	}
+	
+	@GetMapping("/lang/{lang}")
+	public ResponseEntity<?> selectDevListByLang(@PathVariable String lang) {
+		List<Dev> resultList = new ArrayList<>();
+		log.debug("lang = {}", lang);
+		lang = lang.toLowerCase();
+		try {
+			List<Dev> list = demoService.selectDevList();
+			for(Dev dev : list) {
+				String[] langs = dev.getLang();
+				List<String> langList = new ArrayList<>();
+				for(String _lang : langs) {
+					langList.add(_lang.toLowerCase());
+				}
+				if(langList.contains(lang)) {
+					resultList.add(dev);
+				}
+			}
+			
+			if(resultList.isEmpty()) {
+				return ResponseEntity.notFound().build();
+			}
+		} catch (Exception e) {
+			log.error("언어별 개발자 조회 오류!", e);
+			Map<String, Object> map = new HashMap<>();
+			map.put("msg", "언어별 개발자 조회 오류!");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		return ResponseEntity
+				.ok()
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.body(resultList);
+	}
+	//----------------------------------------------------------------------------------
 	
 }

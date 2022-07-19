@@ -29,7 +29,7 @@ import com.kh.spring.member.model.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Controller
+// @Controller
 @RequestMapping("/member")
 @Slf4j
 @SessionAttributes({"loginMember", "next"}) // 특정 키값에 대해 request scope가 아닌 session으로 저장하도록 지정

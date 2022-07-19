@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +39,7 @@
 				</div>
 				<!--로그인폼 -->
 				<!-- https://getbootstrap.com/docs/4.1/components/forms/#overview -->
-				<form method="post">
+				<form:form method="post">
 					<div class="modal-body">
 						<input 
 							type="text" class="form-control" name="memberId"
@@ -52,16 +53,17 @@
 						<button type="submit" class="btn btn-outline-success">로그인</button>
 						<button type="button" class="btn btn-outline-success" data-dismiss="modal">취소</button>
 					</div>
-				</form>
+				</form:form>
 			</div>
 		</div>
 	</div>
 	<!-- Modal 끝-->
+	
 	<script>
 	<c:if test="${not empty msg}">
 		alert('${msg}');
 	</c:if>
-	
+
 	$("#loginModal")
 		.modal()
 		.on('hide.bs.modal', (e) => {

@@ -3,13 +3,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="회원등록" name="title"/>
 </jsp:include>
 <link rel="stylesheet" href="${ pageContext.request.contextPath }/resources/css/member.css" />
 
 <div id="enroll-container" class="mx-auto text-center">
-	<form name="memberEnrollFrm" action="<%-- 현재주소로 전송 --%>" method="POST">
+	<%-- action=""일 경우 현재주소로 전송 --%>
+	<form:form name="memberEnrollFrm" action="" method="POST">
 		<table class="mx-auto"> <%-- 'margin: 0 auto;'와 같은 의미의 클래스명 --%>
 			<tr>
 				<th>아이디</th>
@@ -22,8 +24,8 @@
 							   id="memberId"
 							   value="honggd"
 							   required>
-						<span class="guide ok">이 아이디는 사용 가능합니다.</span>
-						<span class="guide error">이 아이디는 이미 사용 중입니다.</span>
+						<span class="guide ok">이 아이디는 사용가능합니다.</span>
+						<span class="guide error">이 아이디는 이미 사용중입니다.</span>
 						<input type="hidden" id="idValid" value="0" /> <!-- 0-사용 불가 / 1-사용 가능 -->
 					</div>
 				</td>
@@ -49,13 +51,13 @@
 			<tr>
 				<th>생년월일</th>
 				<td>	
-					<input type="date" class="form-control" name="birthday" id="birthday" value="1999-09-09"/>
+					<input type="date" class="form-control" name="birthday" value="1999-09-09" id="birthday"/>
 				</td>
 			</tr> 
 			<tr>
 				<th>이메일</th>
 				<td>	
-					<input type="email" class="form-control" placeholder="abc@xyz.com" name="email" id="email" value="honggd@naver.com" >
+					<input type="email" class="form-control" placeholder="abc@xyz.com" name="email" id="email" value="honggd@naver.com">
 				</td>
 			</tr>
 			<tr>
@@ -75,9 +77,9 @@
 				<td>
 					<div class="form-check form-check-inline">
 						<input type="radio" class="form-check-input" name="gender" id="gender0" value="M">
-						<label class="form-check-label" for="gender0">남</label>&nbsp;
+						<label  class="form-check-label" for="gender0">남</label>&nbsp;
 						<input type="radio" class="form-check-input" name="gender" id="gender1" value="F">
-						<label class="form-check-label" for="gender1">여</label>
+						<label  class="form-check-label" for="gender1">여</label>
 					</div>
 				</td>
 			</tr>
@@ -96,7 +98,7 @@
 		</table>
 		<input type="submit" value="가입" >
 		<input type="reset" value="취소">
-	</form>
+	</form:form>
 </div>
 <script>
 document.querySelector("#memberId").addEventListener('keyup', (e) => {
