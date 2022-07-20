@@ -9,7 +9,7 @@ import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import com.kh.spring.member.dto.Member;
+import com.kh.spring.member.model.dto.Member;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -251,12 +251,13 @@ create table authority (
 select * from member;
 
 insert into authority values ('abcde', 'ROLE_USER');
-insert into authority values ('qwert', 'ROLE_USER');
+insert into authority values ('qwerty', 'ROLE_USER');
 insert into authority values ('honggd', 'ROLE_USER');
 insert into authority values ('iloveyou', 'ROLE_USER');
 insert into authority values ('sejong', 'ROLE_USER');
 insert into authority values ('admin', 'ROLE_USER');
 insert into authority values ('admin', 'ROLE_ADMIN');
+insert into authority values ('sinsa', 'ROLE_USER');
 commit;
 
 select * from authority;
@@ -273,3 +274,13 @@ where
 -- bcrypt 비밀번호 수정
 update member set password = '$2a$10$wknr5gqMXSTB3gKQyEX.SO7/hREW46t3iDGMqC2xpjcf/sQhq8D7m' where member_id = 'qwerty';
 ---------------------------------------------------------
+
+-- remember-me 테이블
+create table persistent_logins (
+        username varchar(64) not null,
+        series varchar(64) primary key,
+        token varchar(64) not null, -- username, password, expiry time을 hashing한 값
+        last_used timestamp not null
+);
+
+select * from persistent_logins;

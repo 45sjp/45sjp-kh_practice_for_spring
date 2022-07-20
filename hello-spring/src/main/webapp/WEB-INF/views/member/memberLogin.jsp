@@ -41,6 +41,14 @@
 				<!-- https://getbootstrap.com/docs/4.1/components/forms/#overview -->
 				<form:form method="post">
 					<div class="modal-body">
+						<c:if test="${param.error != null}">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                              <span class="text-danger">아이디 또는 비밀번호가 일치하지 않습니다.</span>
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                        </c:if>
 						<input 
 							type="text" class="form-control" name="memberId"
 							placeholder="아이디" required> 
@@ -49,9 +57,15 @@
 							type="password" class="form-control" name="password"
 							placeholder="비밀번호" required>
 					</div>
-					<div class="modal-footer">
-						<button type="submit" class="btn btn-outline-success">로그인</button>
-						<button type="button" class="btn btn-outline-success" data-dismiss="modal">취소</button>
+					<div class="modal-footer justify-content-between">
+						<div>
+							<input type="checkbox" class="form-check-input" name="remember-me" id="remember-me" />
+							<label for="remember-me" class="form-check-label">Remember me</label>
+						</div>
+						<div>
+							<button type="submit" class="btn btn-outline-success">로그인</button>
+							<button type="button" class="btn btn-outline-success" data-dismiss="modal">취소</button>
+						</div>
 					</div>
 				</form:form>
 			</div>
@@ -60,9 +74,11 @@
 	<!-- Modal 끝-->
 	
 	<script>
+	<%-- 
 	<c:if test="${not empty msg}">
 		alert('${msg}');
 	</c:if>
+	--%>
 
 	$("#loginModal")
 		.modal()

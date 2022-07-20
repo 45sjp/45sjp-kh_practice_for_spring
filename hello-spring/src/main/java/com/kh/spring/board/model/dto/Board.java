@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kh.spring.member.dto.Member;
+import com.kh.spring.member.model.dto.Member;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.kh.security.model.dao.SecurityDao;
-import com.kh.spring.member.dto.Member;
+import com.kh.spring.member.model.dto.Member;
 
 import lombok.extern.slf4j.Slf4j;
 

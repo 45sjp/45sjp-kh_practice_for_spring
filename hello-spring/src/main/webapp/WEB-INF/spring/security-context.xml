@@ -51,6 +51,14 @@
 				- 모든 POST방식의 폼 제출에 csrf 공격 대비 토큰 검증
 		-->
 		<csrf disabled="false"/>
+		
+		<!-- 
+			remember-me : 사용자가 원할 때 활성화할 수 있음
+				- token-validity-seconds : 토큰 유효시간(초) 60 * 60 * 24 * 14 (2주)
+		-->
+		<remember-me
+			data-source-ref="dataSource"
+			token-validity-seconds="1209600"/>
 	</http>
 	
 	<authentication-manager>

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.kh.spring.member.dto.Member;
+import com.kh.spring.member.model.dto.Member;
 import com.kh.spring.member.model.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;

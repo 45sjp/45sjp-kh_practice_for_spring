@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %> <%-- csrf token --%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,7 +57,9 @@
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/demo/devList.do">Dev 목록</a>
                         </div>
 				    </li>
-				    <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/memberList.do">회원관리</a></li>
+				    <sec:authorize access="hasRole('ADMIN')">
+				    	<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/admin/memberList.do">회원관리</a></li>
+				    </sec:authorize>
 			    </ul>
 			    <sec:authorize access="isAuthenticated()">
 			    	<%-- 로그인한 경우 --%>

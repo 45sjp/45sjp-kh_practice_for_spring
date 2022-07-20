@@ -12,7 +12,12 @@
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven />
+	<!-- #9.5. @AuthenticationPrincipal UserDetails 구현체를 전달 받기 위한 설정 -->
+	<annotation-driven>
+		<argument-resolvers>
+			<beans:bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver"/>
+		</argument-resolvers>
+	</annotation-driven>
 	
 	<!-- #15.1. jacksonMessageConveter 빈 -->
 	<beans:bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></beans:bean>

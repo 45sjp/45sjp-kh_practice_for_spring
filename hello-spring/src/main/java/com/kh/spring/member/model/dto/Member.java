@@ -1,4 +1,4 @@
-package com.kh.spring.member.dto;
+package com.kh.spring.member.model.dto;
 
 import java.util.Collection;
 import java.util.List;
