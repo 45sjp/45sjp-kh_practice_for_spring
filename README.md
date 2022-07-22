@@ -1,1 +1,1 @@
-# 45sjp-kh_practice_for_spring
+# kh_practice_for_spring
